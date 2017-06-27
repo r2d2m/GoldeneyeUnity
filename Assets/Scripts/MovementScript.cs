@@ -3,7 +3,7 @@ using System.Collections;
 
 public class MovementScript : MonoBehaviour
 {
-
+    public float deltaMovement = 2f;
 	public float speed = 10.0f;
 	public float gravity = 10.0f;
 	public float maxVelocityChange = 10.0f;
@@ -11,6 +11,42 @@ public class MovementScript : MonoBehaviour
 	public float jumpHeight = 1.0f;
 	private bool grounded = false;
 	Rigidbody rb;
+
+    void Start ()
+    {
+
+    }
+
+    void Update ()
+    {
+        Movement();
+    }
+
+    void OnCollisionStay (Collision collision)
+    {
+        if (collision.gameObject.name == "Plane_base")
+            if (Input.GetKeyDown(KeyCode.Space))
+                GetComponent<Rigidbody>().AddForce(Vector3.up * 50f, ForceMode.Impulse);
+    }
+    
+    private void Movement ()
+    {
+        if (Input.GetKey(KeyCode.W))
+            transform.Translate(Vector3.forward * deltaMovement * Time.deltaTime);
+        if (Input.GetKey(KeyCode.S))
+            transform.Translate(Vector3.back * deltaMovement * Time.deltaTime);
+        if (Input.GetKey(KeyCode.A))
+            transform.Translate(Vector3.left * deltaMovement * Time.deltaTime);
+        if (Input.GetKey(KeyCode.D))
+            transform.Translate(Vector3.right * deltaMovement * Time.deltaTime);
+    }
+
+/*    private void RecollectAmmo ()
+    {
+        _shoot.AddAmmo();
+        GameObject usedWeapon = GameObject.Find("Weapon_pp7");
+        Destroy(usedWeapon);
+    }*/
 
 	void Awake()
 	{
@@ -23,7 +59,6 @@ public class MovementScript : MonoBehaviour
 	{
 		if (grounded)
 		{
-			// Calculate how fast we should be moving
 			Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
 			targetVelocity = transform.TransformDirection(targetVelocity);
 			targetVelocity *= speed;
@@ -43,7 +78,6 @@ public class MovementScript : MonoBehaviour
 			}
 		}
 
-		// We apply gravity manually for more tuning control
 		rb.AddForce(new Vector3(0, -gravity * rb.mass, 0));
 
 		grounded = false;
@@ -56,8 +90,6 @@ public class MovementScript : MonoBehaviour
 
 	float CalculateJumpVerticalSpeed()
 	{
-		// From the jump height and gravity we deduce the upwards speed 
-		// for the character to reach at the apex.
 		return Mathf.Sqrt(2 * jumpHeight * gravity);
 	}
 
