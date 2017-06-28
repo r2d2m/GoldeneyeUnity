@@ -3,135 +3,65 @@ using System.Collections;
 
 public class MovementScript : MonoBehaviour
 {
-    public float walkSpeed = 6.0f;
-    public float runSpeed = 11.0f;
 
-    public bool limitDiagonalSpeed = true;
-    public bool toggleRun = false;
+	public float speed = 10.0f;
+	public float gravity = 10.0f;
+	public float maxVelocityChange = 10.0f;
+	public bool canJump = true;
+	public float jumpHeight = 1.0f;
+	private bool grounded = false;
+	Rigidbody rb;
 
-    public float jumpSpeed = 8.0f;
-    public float gravity = 9.8f;
+	void Awake()
+	{
+		rb = gameObject.GetComponent<Rigidbody>();
+		rb.freezeRotation = true;
+		rb.useGravity = false;
+	}
 
-    public bool slideWhenOverSlopeLimit = false;
-    public bool slideOnTaggedObjects = false;
-    public float slideSpeed = 12.0f;
+	void FixedUpdate()
+	{
+		if (grounded)
+		{
+			// Calculate how fast we should be moving
+			Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+			targetVelocity = transform.TransformDirection(targetVelocity);
+			targetVelocity *= speed;
 
-    public bool airControl = false;
-    public float antiBumpFactor = 0.75f;
-    public int antiBunnyHopFactor = 1;
+			// Apply a force that attempts to reach our target velocity
+			Vector3 velocity = rb.velocity;
+			Vector3 velocityChange = (targetVelocity - velocity);
+			velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
+			velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
+			velocityChange.y = 0;
+			rb.AddForce(velocityChange, ForceMode.VelocityChange);
 
-    private Vector3 moveDirection = Vector3.zero;
-    private bool grounded = false;
-    private CharacterController controller;
-    private Transform myTransform;
-    private float speed;
-    private RaycastHit hit;
-    private float fallStartLevel;
-    private bool falling;
-    private float slideLimit;
-    private float rayDistance;
-    private Vector3 contactPoint;
-    private bool playerControl = false;
-    private int jumpTimer;
+			// Jump
+			if (canJump && Input.GetButton("Jump"))
+			{
+				grounded = false;
+				rb.velocity = new Vector3(velocity.x, CalculateJumpVerticalSpeed(), velocity.z);
+			}
+		}
 
-    void Start()
-    {
-        controller = GetComponent<CharacterController>();
-        myTransform = transform;
-        speed = walkSpeed;
-        rayDistance = controller.height * .5f + controller.radius;
-        slideLimit = controller.slopeLimit - .1f;
-        jumpTimer = antiBunnyHopFactor;
-    }
+		// We apply gravity manually for more tuning control
+		rb.AddForce(new Vector3(0, -gravity * rb.mass, 0));
+	}
 
-    void FixedUpdate()
-    {
-        bool W = Input.GetKey(KeyCode.W);
-        bool A = Input.GetKey(KeyCode.A);
-        bool S = !W && Input.GetKey(KeyCode.S);
-        bool D = !A && Input.GetKey(KeyCode.D);
+	void OnCollisionStay()
+	{
+		grounded = true;
+	}
 
-        float inputX = (W || S) ? (W ? 1.0f : -1.0f) : 0f;
-        float inputY = (A || D) ? (D ? 1.0f : -1.0f) : 0f;
+	float CalculateJumpVerticalSpeed()
+	{
+		// From the jump height and gravity we deduce the upwards speed 
+		// for the character to reach at the apex.
+		return Mathf.Sqrt(2 * jumpHeight * gravity);
+	}
 
-        float inputModifyFactor = ((W || S) && (A || D) && limitDiagonalSpeed) ? .7071f : 1.0f;
-
-        if (grounded)
-        {
-            bool sliding = false;
-
-            if (Physics.Raycast(myTransform.position, -Vector3.up, out hit, rayDistance))
-            {
-                if (Vector3.Angle(hit.normal, Vector3.up) > slideLimit)
-                {
-                    sliding = true;
-                }
-            }
-            else
-            {
-                Physics.Raycast(contactPoint + Vector3.up, -Vector3.up, out hit);
-                if (Vector3.Angle(hit.normal, Vector3.up) > slideLimit) {
-                    sliding = true;
-                }
-            }
-
-            if (!toggleRun)
-            {
-                speed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
-            }
-
-            if ((sliding && slideWhenOverSlopeLimit) || (slideOnTaggedObjects && hit.collider.tag == "Slide"))
-            {
-                Vector3 hitNormal = hit.normal;
-                moveDirection = new Vector3(hitNormal.x, -hitNormal.y, hitNormal.z);
-                Vector3.OrthoNormalize(ref hitNormal, ref moveDirection);
-                moveDirection *= slideSpeed;
-                playerControl = false;
-            }
-            else
-            {
-                moveDirection = new Vector3(inputX * inputModifyFactor, -antiBumpFactor, inputY * inputModifyFactor);
-                moveDirection = new Vector3(1.0f * inputModifyFactor, -antiBumpFactor, 1.0f * inputModifyFactor);
-                moveDirection = myTransform.TransformDirection(moveDirection) * speed;
-                playerControl = true;
-            }
-
-            if (!Input.GetKey(KeyCode.Space))
-            {
-                ++jumpTimer;
-            }
-            else if (jumpTimer >= antiBunnyHopFactor)
-            {
-                moveDirection.y = jumpSpeed;
-                jumpTimer = 0;
-            }
-        }
-        else
-        {
-            if (airControl && playerControl)
-            {
-                moveDirection.x = inputX * speed * inputModifyFactor;
-                moveDirection.z = inputY * speed * inputModifyFactor;
-                moveDirection = myTransform.TransformDirection(moveDirection);
-            }
-        }
-
-        moveDirection.y -= gravity * Time.deltaTime;
-
-        grounded = (controller.Move(moveDirection * Time.deltaTime) & CollisionFlags.Below) != 0;
-    }
-
-    void Update()
-    {
-        // If the run button is set to toggle, then switch between walk/run speed. (We use Update for this...
-        // FixedUpdate is a poor place to use GetButtonDown, since it doesn't necessarily run every frame and can miss the event)
-        if (toggleRun && grounded && Input.GetButtonDown("Run"))
-            speed = (speed == walkSpeed ? runSpeed : walkSpeed);
-    }
-
-    // Store point that we're in contact with for use in FixedUpdate if needed
-    void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        contactPoint = hit.point;
-    }
+	public void ModifySpeed(float difference)
+	{
+		speed += difference;
+	}
 }
