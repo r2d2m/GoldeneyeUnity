@@ -80,6 +80,7 @@ public class Shoot : MonoBehaviour
             {
                 if (totalBulletCount > 0)
                 {
+                    _scopeActive.Active(false);
                     animate.Play("Reload");
                     source.PlayOneShot(reloadWeapon, volume);
                     // Reassign ammo data
@@ -97,6 +98,7 @@ public class Shoot : MonoBehaviour
                     // Print HUD
                     _magazineAmmo.RefreshData(magazineBulletCount);
                     _totalAmmo.RefreshData(totalBulletCount);
+                    _scopeActive.Active(true);
                 }
                 else if (!source.isPlaying)
                 {
