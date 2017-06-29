@@ -48,9 +48,12 @@ public class MovementScript : MonoBehaviour
 		rb.AddForce(new Vector3(0, -gravity * rb.mass, 0));
 	}
 
-	void OnCollisionStay()
+	void OnCollisionStay(Collision collision)
 	{
-		grounded = true;
+        if (collision.gameObject.tag == "Floor")
+        {
+            grounded = true;
+        }
 	}
 
 	float CalculateJumpVerticalSpeed()
