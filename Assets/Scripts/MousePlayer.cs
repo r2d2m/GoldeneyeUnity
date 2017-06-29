@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MousePlayer : MonoBehaviour
 {
+    public float mouseMultiplier;
     float rotationX = 0f;
 
     void Start()
@@ -14,11 +15,6 @@ public class MousePlayer : MonoBehaviour
     void Update()
     {
         rotationX += Input.GetAxis("Mouse X") * 100f * Time.deltaTime;
-        transform.localEulerAngles = new Vector3(0, rotationX, 0);
-    }
-
-    void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log(collision.gameObject.name);
+        transform.localEulerAngles = new Vector3(0, rotationX * mouseMultiplier, 0);
     }
 }
