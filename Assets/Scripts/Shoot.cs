@@ -54,7 +54,7 @@ public class Shoot : MonoBehaviour
 
     void Update()
     {
-        if (!animate.IsPlaying("Reload"))
+        if (Time.timeScale > 0 && !animate.IsPlaying("Reload"))
         {
             // Show/hide scope
             if (Input.GetKeyDown(KeyCode.Mouse1))

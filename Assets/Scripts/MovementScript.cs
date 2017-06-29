@@ -3,7 +3,6 @@ using System.Collections;
 
 public class MovementScript : MonoBehaviour
 {
-
 	public float speed = 10.0f;
 	public float gravity = 10.0f;
 	public float maxVelocityChange = 10.0f;

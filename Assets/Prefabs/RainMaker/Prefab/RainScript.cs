@@ -60,7 +60,6 @@ namespace DigitalRuby.RainMaker
         protected override void Update()
         {
             base.Update();
-
             UpdateRain();
         }
     }
