@@ -5,6 +5,7 @@ public class IASoldiers : MonoBehaviour {
 
     public float HP = 5f;
 
+	public float angleVision = 45f;
     public float seenDistance = 15f;
     public float helpDistance = 15f;
 
@@ -21,18 +22,26 @@ public class IASoldiers : MonoBehaviour {
 	void Update () {
         if (!isHostile)
         {
-            if (Vector3.Distance(transform.position, target.position) < 15f)
+			Vector3 heading = target.position - transform.position;
+			float distance = heading.magnitude;
+			Vector3 direction = heading / distance;
+
+			if (distance < 15f)
             {
-                isHostile = true;
-                GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-                foreach (GameObject enemy in enemies)
-                {
-                    if (Vector3.Distance(transform.position, enemy.transform.position) <= helpDistance)
-                    {
-                        _iaSoldiers = enemy.GetComponent<IASoldiers>();
-                        _iaSoldiers.RequestHelp();
-                    }
-                }
+				Ray ray = new Ray(transform.position, direction);
+				RaycastHit hit;
+				if (Physics.Raycast(ray, out hit) && hit.collider.gameObject.name == "007") {
+
+
+					isHostile = true;
+					GameObject[] enemies = GameObject.FindGameObjectsWithTag ("Enemy");
+					foreach (GameObject enemy in enemies) {
+						if (Vector3.Distance (transform.position, enemy.transform.position) <= helpDistance) {
+							_iaSoldiers = enemy.GetComponent<IASoldiers> ();
+							_iaSoldiers.RequestHelp ();
+						}
+					}
+				}
             }
         }
         else

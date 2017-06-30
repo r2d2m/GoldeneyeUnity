@@ -59,12 +59,14 @@ public class Shoot : MonoBehaviour
     {
         if (Time.timeScale > 0 && !animate.IsPlaying("Reload"))
         {
-            if (_move.speed != normalSpeed) {
+			if (!Input.GetKey(KeyCode.Mouse1) && _move.speed != normalSpeed) {
+				_scopeActive.Active(false); 
                 _move.ModifySpeed(speedDifference);
             }
 
             if (Input.GetKeyDown(KeyCode.Mouse1))
             {
+				_scopeActive.Active(true); 
                 _move.ModifySpeed(-speedDifference);
             }
 
@@ -96,7 +98,7 @@ public class Shoot : MonoBehaviour
                     _scopeActive.Active(false);
                     animate.Play("Reload");
                     source.PlayOneShot(reloadWeapon, volume);
-                    // Reassign ammo data
+                    
                     int currentAmmo = magazineBulletCount;
                     if (totalBulletCount + currentAmmo >= magazineSize)
                     {
@@ -108,10 +110,9 @@ public class Shoot : MonoBehaviour
                         magazineBulletCount += totalBulletCount;
                         totalBulletCount = 0;
                     }
-                    // Print HUD
+
                     _magazineAmmo.RefreshData(magazineBulletCount);
                     _totalAmmo.RefreshData(totalBulletCount);
-                    _scopeActive.Active(true);
                 }
 
                 else if (!source.isPlaying)
