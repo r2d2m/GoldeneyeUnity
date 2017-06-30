@@ -22,6 +22,8 @@ public class Shoot : MonoBehaviour
     public int magazineSize;
     public int WeaponAmmoSize;
 
+    private float normalSpeed;
+
     void Start()
     {
         // Initialize ammo values
@@ -39,6 +41,7 @@ public class Shoot : MonoBehaviour
         // Player instances
         GameObject player = GameObject.Find("007");
         _move = player.GetComponent<MovementScript>();
+        normalSpeed = _move.speed;
 
         // UI set data
         _magazineAmmo.RefreshData(magazineBulletCount);
@@ -56,16 +59,13 @@ public class Shoot : MonoBehaviour
     {
         if (Time.timeScale > 0 && !animate.IsPlaying("Reload"))
         {
-            // Show/hide scope
+            if (_move.speed != normalSpeed) {
+                _move.ModifySpeed(speedDifference);
+            }
+
             if (Input.GetKeyDown(KeyCode.Mouse1))
             {
-                _scopeActive.Active(true);
                 _move.ModifySpeed(-speedDifference);
-            }
-            else if (Input.GetKeyUp(KeyCode.Mouse1))
-            {
-                _scopeActive.Active(false);
-                _move.ModifySpeed(speedDifference);
             }
 
             if (Input.GetKeyDown(KeyCode.Mouse0) && !animate.IsPlaying("Shoot") && magazineBulletCount > 0)
@@ -73,9 +73,22 @@ public class Shoot : MonoBehaviour
                 animate.Play("Shoot");
                 source.PlayOneShot(shootBullet, volume);
 
+                Ray ray = Camera.main.ScreenPointToRay(Vector3.forward);
+                RaycastHit hit;
+                if (Physics.Raycast(ray, out hit))
+                {
+                    if (hit.collider.gameObject.tag == "Enemy")
+                    {
+                        IASoldiers _iaSoldier = hit.collider.gameObject.GetComponent<IASoldiers>();
+                        _iaSoldier.HitAndDecreaseHP(2f);
+                    }
+
+                }
+
                 --magazineBulletCount;
                 _magazineAmmo.RefreshData(magazineBulletCount);
             }
+
             else if ((Input.GetKeyDown(KeyCode.R) || (magazineBulletCount == 0 && totalBulletCount != 0)) && magazineBulletCount < magazineSize)
             {
                 if (totalBulletCount > 0)
@@ -100,13 +113,13 @@ public class Shoot : MonoBehaviour
                     _totalAmmo.RefreshData(totalBulletCount);
                     _scopeActive.Active(true);
                 }
+
                 else if (!source.isPlaying)
                 {
                     source.PlayOneShot(reloadWeapon, volume);
                 }
             }
         }
-
     }
 
     public void AddAmmo()

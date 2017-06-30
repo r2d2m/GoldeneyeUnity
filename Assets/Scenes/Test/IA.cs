@@ -7,6 +7,7 @@ public class IA : MonoBehaviour {
 
     NavMeshAgent agent;
     public Transform target;
+    bool following = false;
 
 	// Use this for initialization
 	void Start () {
@@ -15,14 +16,25 @@ public class IA : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetMouseButtonDown(0))
+        float distance = Vector3.Distance(transform.position, target.position);
+        if (!following && distance <= 20f)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
-            {
-                agent.SetDestination(hit.point);
-            }
+            following = true;
+        }
+        else if (following && distance > 40f)
+        {
+            following = false;
+        }
+
+        if (following)
+        {
+            //Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            //RaycastHit hit;
+            //if (Physics.Raycast(ray, out hit))
+            //{
+            //    agent.SetDestination(hit.point);
+            //}
+            agent.SetDestination(target.position);
         }
 	}
 }
