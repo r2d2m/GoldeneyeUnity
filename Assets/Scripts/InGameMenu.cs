@@ -8,45 +8,38 @@ public class InGameMenu : MonoBehaviour
 
     public AudioClip menuMusic;
     public AudioClip levelMusic;
+	public Animation watchAnimation;
 
-    AudioSource source;
+    private AudioSource source;
 
 	void Start () {
         source = GetComponent<AudioSource>();
+		watchAnimation = GetComponent<Animation>();
 	}
 	
 	void Update ()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
+		if (Input.GetKeyDown(KeyCode.Escape) && !watchAnimation.isPlaying)
+		{
             if (gamePaused)
             {
-                //Time.timeScale = 1;
+                Time.timeScale = 1;
                 source.Stop();
                 source.PlayOneShot(levelMusic);
-                //MoveCameraToWatch();
+				watchAnimation["Watch"].speed = -1;
+				watchAnimation["Watch"].time = watchAnimation["Watch"].length;
+				watchAnimation.Play();
             }
             else
             {
-                //Time.timeScale = 0;
+                Time.timeScale = 0;
                 source.Stop();
                 source.PlayOneShot(menuMusic, 1f);
-                //MoveCameraToWatch();
+				watchAnimation["Watch"].speed = 1;
+				watchAnimation["Watch"].time = 0;
+				watchAnimation.Play();
             }
             gamePaused ^= true;
         }
 	}
-
-    void MoveCameraToWatch ()
-    {
-        Debug.Log(transform.localEulerAngles);
-        if (transform.localEulerAngles.y > -45f)
-        {
-            transform.localEulerAngles = new Vector3(10f, 0);
-        }
-        else if (Camera.main.fieldOfView > 15)
-        {
-            Camera.current.fieldOfView -= 0.1f;
-        }
-    }
 }
