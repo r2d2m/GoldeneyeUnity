@@ -26,12 +26,11 @@ public class IASoldiers : MonoBehaviour {
 			float distance = heading.magnitude;
 			Vector3 direction = heading / distance;
 
-			if (distance < 15f)
+			if (distance < seenDistance)
             {
-				Ray ray = new Ray(transform.position, direction);
+				Ray ray = new Ray(transform.position, target.position);
 				RaycastHit hit;
 				if (Physics.Raycast(ray, out hit) && hit.collider.gameObject.name == "007") {
-
 
 					isHostile = true;
 					GameObject[] enemies = GameObject.FindGameObjectsWithTag ("Enemy");
@@ -42,11 +41,12 @@ public class IASoldiers : MonoBehaviour {
 						}
 					}
 				}
+				Debug.DrawRay(transform.position, target.position, Color.green, 1);
             }
         }
         else
         {
-            agent.SetDestination(target.position);
+            //agent.SetDestination(target.position);
         }
 	}
 

@@ -21,6 +21,7 @@ public class Shoot : MonoBehaviour
 
     public int magazineSize;
     public int WeaponAmmoSize;
+	public float shootDistance;
 
     private float normalSpeed;
 
@@ -75,7 +76,7 @@ public class Shoot : MonoBehaviour
                 animate.Play("Shoot");
                 source.PlayOneShot(shootBullet, volume);
 
-                Ray ray = Camera.main.ScreenPointToRay(Vector3.forward);
+				Ray ray = new Ray(Vector3.zero, new Vector3(0, 0, shootDistance));
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit))
                 {
@@ -84,7 +85,11 @@ public class Shoot : MonoBehaviour
                         IASoldiers _iaSoldier = hit.collider.gameObject.GetComponent<IASoldiers>();
                         _iaSoldier.HitAndDecreaseHP(2f);
                     }
-
+					Debug.DrawRay(Vector3.zero, new Vector3(
+						shootDistance * Mathf.Sin(transform.rotation.x),
+						shootDistance * Mathf.Sin(transform.rotation.y),
+						shootDistance * Mathf.Sin(transform.rotation.z)
+					), Color.green, 1);
                 }
 
                 --magazineBulletCount;
