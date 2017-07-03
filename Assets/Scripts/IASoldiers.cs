@@ -9,14 +9,19 @@ public class IASoldiers : MonoBehaviour {
     public float seenDistance = 15f;
     public float helpDistance = 15f;
 
+    public AudioClip[] reactions;
+    private AudioSource source;
+
     public Transform target;
 
     NavMeshAgent agent;
     IASoldiers _iaSoldiers;
+    Random random = new Random();
     bool isHostile = false;
      
 	void Start () {
         agent = GetComponent<NavMeshAgent>();
+        source = GetComponent<AudioSource>();
 	}
 	
 	void Update () {
@@ -58,9 +63,10 @@ public class IASoldiers : MonoBehaviour {
     public void HitAndDecreaseHP(float damage)
     {
         HP -= damage;
+        source.PlayOneShot(reactions[Random.Range(0, reactions.Length)]);
         if (HP <= 0f)
         {
-            Destroy(this.gameObject);
+            Destroy(this.gameObject, 1);
         }
     }
 }
