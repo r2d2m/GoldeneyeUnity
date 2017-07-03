@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class InGameMenu : MonoBehaviour
 {
-    public bool gamePaused = false;
+    private bool gamePaused = false;
     private bool isAnimated = false;
 
     public AudioClip menuMusic;
     public AudioClip levelMusic;
 
     private AudioSource source;
+    private Animator animator;
 
 	void Start () {
         source = GetComponent<AudioSource>();
+        animator = GetComponent<Animator>();
 	}
 	
 	void Update ()
@@ -29,11 +31,12 @@ public class InGameMenu : MonoBehaviour
             }
             else
             {
-                //;Time.timeScale = 0;
+                //Time.timeScale = 0;
                 source.Stop();
                 source.PlayOneShot(menuMusic, 1f);
             }
             gamePaused ^= true;
+            animator.SetBool("gamePaused", gamePaused);
         }
 	}
 
