@@ -13,6 +13,8 @@ public class IASoldiers : MonoBehaviour {
 
     public AudioClip[] reactions;
     private AudioSource source;
+    private Animator animator;
+    private Rigidbody rb;
 
     public Transform target;
 	public GameObject alarm;
@@ -25,6 +27,8 @@ public class IASoldiers : MonoBehaviour {
 	void Start () {
         agent = GetComponent<NavMeshAgent>();
         source = GetComponent<AudioSource>();
+        animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
 	}
 	
 	void Update () {
@@ -35,7 +39,6 @@ public class IASoldiers : MonoBehaviour {
 				Ray ray = new Ray(transform.position, target.position);
 				RaycastHit hit;
 				if (Physics.Raycast(ray, out hit)) {
-					Debug.Log (hit.collider.gameObject.name);
 					GameObject[] enemies = GameObject.FindGameObjectsWithTag ("Enemy");
 					foreach (GameObject enemy in enemies) {
 						if (Vector3.Distance (transform.position, enemy.transform.position) <= helpDistance) {
@@ -58,6 +61,7 @@ public class IASoldiers : MonoBehaviour {
 			} else {
 				agent.SetDestination(target.position);
 			}
+            animator.SetBool("Moving", rb.velocity.magnitude > 0f);
         }
 	}
 
