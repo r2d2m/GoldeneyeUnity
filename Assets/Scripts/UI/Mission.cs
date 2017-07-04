@@ -1,18 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class Mission : MonoBehaviour {
 
+    private Text messages;
 	private List<Objective> objectives;
 
 	void Start () {
+        // TODO: Create on menu selection
+        PlayerPrefs.SetString("Mission0", "Neutralize all alarms");
+        //
+        messages = GameObject.Find("Messages").GetComponent<Text>();
 		objectives = new List<Objective> ();
 		int i = 0;
 		while (PlayerPrefs.HasKey("Mission" + i.ToString()))
 		{
             string description = PlayerPrefs.GetString("Mission" + i.ToString());
-			objectives.Add(new Objective(i, description, 3));
+			objectives.Add(new Objective(i, description, 1));
 			++i;
 		}
 	}
@@ -23,13 +29,20 @@ public class Mission : MonoBehaviour {
 		{
 			if (o.GetId() == objectiveId)
 			{
-				if (o.UpdateProgress ())
+				if (o.UpdateProgress())
 				{
-					Debug.Log ("Mission acomplished");
-				}
+                    messages.text = "Objective " + char.ConvertFromUtf32(65) + " completed";
+                    StartCoroutine(RemoveText());
+                }
 			}
 		}
 	}
+
+    private IEnumerator RemoveText()
+    {
+        yield return new WaitForSeconds(5);
+        messages.text = "";
+    }
 
 	private class Objective
 	{

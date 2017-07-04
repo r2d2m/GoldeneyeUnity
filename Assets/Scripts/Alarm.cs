@@ -9,9 +9,11 @@ public class Alarm : MonoBehaviour {
 
 	private AudioSource source;
 	private IASoldiers _iaSoldiers;
+    private Mission _mision;
 
 	void Start () {
 		source = GetComponent<AudioSource>();
+        _mision = GameObject.Find("HUD").GetComponent<Mission>();
 	}
 
 	public void ActivateAlarm() {
@@ -28,6 +30,7 @@ public class Alarm : MonoBehaviour {
 	public void HitAndDecreaseHP(float damage) {
 		HP -= damage;
 		if (HP <= 0) {
+            _mision.UpdateProgress(0);
 			source.Stop();
 			Destroy(this.gameObject, 0);
 		}

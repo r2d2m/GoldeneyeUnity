@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class InGameMenu : MonoBehaviour
 {
@@ -10,8 +9,12 @@ public class InGameMenu : MonoBehaviour
     public AudioClip menuMusic;
     public AudioClip levelMusic;
 
+    public AudioClip enableWatch;
+    public AudioClip disableWatch;
+
     private AudioSource source;
     private Animator animator;
+    private GameObject go;
 
 	void Start () {
         source = GetComponent<AudioSource>();
@@ -31,6 +34,11 @@ public class InGameMenu : MonoBehaviour
             }
             else
             {
+                go = GameObject.Find("Menu");
+                go.GetComponent<Image>().enabled = false;
+                go.GetComponent<AudioSource>().PlayOneShot(disableWatch);
+                go = GameObject.Find("MenuBackground");
+                go.GetComponent<Image>().enabled = false;
                 source.Stop();
                 source.PlayOneShot(menuMusic, 1f);
             }
@@ -46,6 +54,11 @@ public class InGameMenu : MonoBehaviour
 
     private void EventCanExitMenu()
     {
+        go = GameObject.Find("Menu");
+        go.GetComponent<Image>().enabled = true;
+        go.GetComponent<AudioSource>().PlayOneShot(enableWatch);
+        go = GameObject.Find("MenuBackground");
+        go.GetComponent<Image>().enabled = true;
         Time.timeScale = 0;
         isAnimated = false;
     }
