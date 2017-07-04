@@ -25,13 +25,12 @@ public class InGameMenu : MonoBehaviour
             isAnimated = true;
             if (gamePaused)
             {
-                //Time.timeScale = 1;
+                Time.timeScale = 1;
                 source.Stop();
                 source.PlayOneShot(levelMusic);
             }
             else
             {
-                //Time.timeScale = 0;
                 source.Stop();
                 source.PlayOneShot(menuMusic, 1f);
             }
@@ -47,6 +46,7 @@ public class InGameMenu : MonoBehaviour
 
     private void EventCanExitMenu()
     {
+        Time.timeScale = 0;
         isAnimated = false;
     }
 }
