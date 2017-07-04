@@ -3,20 +3,23 @@ using UnityEngine.AI;
 
 public class IASoldiers : MonoBehaviour {
 
-    public float HP = 5f;
+    public float HP = 3f;
 
 	public float angleVision = 45f;
     public float seenDistance = 15f;
     public float helpDistance = 15f;
 
+	public bool activatesAlarm = false;
+
     public AudioClip[] reactions;
     private AudioSource source;
 
     public Transform target;
+	public GameObject alarm;
 
     NavMeshAgent agent;
     IASoldiers _iaSoldiers;
-    Random random = new Random();
+
     bool isHostile = false;
      
 	void Start () {
@@ -27,17 +30,12 @@ public class IASoldiers : MonoBehaviour {
 	void Update () {
         if (!isHostile)
         {
-			Vector3 heading = target.position - transform.position;
-			float distance = heading.magnitude;
-			Vector3 direction = heading / distance;
-
-			if (distance < seenDistance)
+			if (Vector3.Distance(target.position, transform.position) < seenDistance)
             {
 				Ray ray = new Ray(transform.position, target.position);
 				RaycastHit hit;
-				if (Physics.Raycast(ray, out hit) && hit.collider.gameObject.name == "007") {
-
-					isHostile = true;
+				if (Physics.Raycast(ray, out hit)) {
+					Debug.Log (hit.collider.gameObject.name);
 					GameObject[] enemies = GameObject.FindGameObjectsWithTag ("Enemy");
 					foreach (GameObject enemy in enemies) {
 						if (Vector3.Distance (transform.position, enemy.transform.position) <= helpDistance) {
@@ -46,16 +44,24 @@ public class IASoldiers : MonoBehaviour {
 						}
 					}
 				}
-				Debug.DrawRay(transform.position, target.position, Color.green, 1);
+				Debug.DrawRay(transform.position, target.position, Color.green, 100);
             }
         }
         else
         {
-            //agent.SetDestination(target.position);
+			if (activatesAlarm && alarm != null) {
+				agent.SetDestination(alarm.transform.position);
+				if (Vector3.Distance(transform.position, alarm.transform.position) < 5f) {
+					alarm.GetComponent<Alarm>().ActivateAlarm();
+					activatesAlarm = false;
+				}
+			} else {
+				agent.SetDestination(target.position);
+			}
         }
 	}
 
-    protected void RequestHelp()
+    public void RequestHelp()
     {
         isHostile = true;
     }

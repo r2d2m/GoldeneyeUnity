@@ -22,6 +22,7 @@ public class Shoot : MonoBehaviour
     public int magazineSize;
     public int WeaponAmmoSize;
 	public float shootDistance;
+	public float weaponDamage;
 
     private float normalSpeed;
 
@@ -80,11 +81,15 @@ public class Shoot : MonoBehaviour
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit))
                 {
-                    if (hit.collider.gameObject.tag == "Enemy")
-                    {
-                        IASoldiers _iaSoldier = hit.collider.gameObject.GetComponent<IASoldiers>();
-                        _iaSoldier.HitAndDecreaseHP(2f);
-                    }
+					if (hit.collider.gameObject.tag == "Enemy") {
+						IASoldiers _iaSoldier = hit.collider.gameObject.GetComponent<IASoldiers>();
+						_iaSoldier.HitAndDecreaseHP(weaponDamage);
+					}
+					else if (hit.collider.gameObject.tag == "Alarm")
+					{
+						Alarm _alarm = hit.collider.gameObject.GetComponent<Alarm>();
+						_alarm.HitAndDecreaseHP(weaponDamage);
+					}
                 }
 
                 --magazineBulletCount;
