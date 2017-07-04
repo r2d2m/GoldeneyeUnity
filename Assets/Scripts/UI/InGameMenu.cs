@@ -28,18 +28,18 @@ public class InGameMenu : MonoBehaviour
             isAnimated = true;
             if (gamePaused)
             {
-                Time.timeScale = 1;
-                source.Stop();
+				Time.timeScale = 1;
+				go = GameObject.Find("Menu");
+				go.GetComponent<Image>().enabled = false;
+				go.GetComponent<AudioSource>().PlayOneShot(disableWatch);
+				go = GameObject.Find("MenuBackground");
+				go.GetComponent<Image>().enabled = false;
+				source.Stop();
                 source.PlayOneShot(levelMusic);
             }
             else
             {
-                go = GameObject.Find("Menu");
-                go.GetComponent<Image>().enabled = false;
-                go.GetComponent<AudioSource>().PlayOneShot(disableWatch);
-                go = GameObject.Find("MenuBackground");
-                go.GetComponent<Image>().enabled = false;
-                source.Stop();
+				source.Stop();
                 source.PlayOneShot(menuMusic, 1f);
             }
             gamePaused = !gamePaused;

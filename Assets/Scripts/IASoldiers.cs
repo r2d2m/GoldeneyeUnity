@@ -58,7 +58,7 @@ public class IASoldiers : MonoBehaviour {
         {
 			if (activatesAlarm && alarm != null && !alarm.GetComponent<AudioSource>().isPlaying) {
 				agent.SetDestination(alarm.transform.position);
-				if (Vector3.Distance(transform.position, alarm.transform.position) <= 2f) {
+				if (Vector3.Distance(transform.position, alarm.transform.position) <= 3f) {
 					alarm.GetComponent<Alarm>().ActivateAlarm();
 					activatesAlarm = false;
 				}
