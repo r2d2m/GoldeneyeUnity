@@ -17,7 +17,8 @@ public class Shoot : MonoBehaviour
     AmmoSetter _totalAmmo;
     ScopeActive _scopeActive;
 
-    MovementScript _move;
+    private MovementScript _move;
+    private GameObject player;
 
     public int magazineSize;
     public int WeaponAmmoSize;
@@ -41,7 +42,7 @@ public class Shoot : MonoBehaviour
         _scopeActive = scopeImage.GetComponent<ScopeActive>();
 
         // Player instances
-        GameObject player = GameObject.Find("007");
+        player = GameObject.Find("007");
         _move = player.GetComponent<MovementScript>();
         normalSpeed = _move.speed;
 
@@ -77,7 +78,7 @@ public class Shoot : MonoBehaviour
                 animate.Play("Shoot");
                 source.PlayOneShot(shootBullet, volume);
 
-                Ray ray = new Ray(transform.position, transform.forward);
+                Ray ray = new Ray(player.transform.position, player.transform.forward);
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit))
                 {
