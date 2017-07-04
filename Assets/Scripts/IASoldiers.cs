@@ -7,7 +7,9 @@ public class IASoldiers : MonoBehaviour {
 
 	public float angleVision = 45f;
     public float seenDistance = 15f;
-    public float helpDistance = 15f;
+    public float helpDistance = 50f;
+    public float shootDistance = 15f;
+    public int consecutiveShoots = 1000;
 
 	public bool activatesAlarm = false;
 
@@ -22,7 +24,9 @@ public class IASoldiers : MonoBehaviour {
     NavMeshAgent agent;
     IASoldiers _iaSoldiers;
 
-    bool isHostile = false;
+    private bool canShoot = true;
+    private bool isHostile = false;
+    private int currentShoots = 0;
      
 	void Start () {
         agent = GetComponent<NavMeshAgent>();
@@ -32,35 +36,51 @@ public class IASoldiers : MonoBehaviour {
 	}
 	
 	void Update () {
+        float distance = Vector3.Distance(target.position, transform.position);
         if (!isHostile)
         {
-			if (Vector3.Distance(target.position, transform.position) < seenDistance)
+			if (distance < seenDistance)
             {
 				Ray ray = new Ray(transform.position, target.position);
 				RaycastHit hit;
 				if (Physics.Raycast(ray, out hit)) {
-					GameObject[] enemies = GameObject.FindGameObjectsWithTag ("Enemy");
-					foreach (GameObject enemy in enemies) {
-						if (Vector3.Distance (transform.position, enemy.transform.position) <= helpDistance) {
-							_iaSoldiers = enemy.GetComponent<IASoldiers> ();
-							_iaSoldiers.RequestHelp ();
+					GameObject[] allies = GameObject.FindGameObjectsWithTag("Enemy");
+					foreach (GameObject ally in allies) {
+						if (Vector3.Distance (transform.position, ally.transform.position) <= helpDistance) {
+							_iaSoldiers = ally.GetComponent<IASoldiers>();
+							_iaSoldiers.RequestHelp();
 						}
 					}
 				}
-				Debug.DrawRay(transform.position, target.position, Color.green, 100);
             }
         }
         else
         {
-			if (activatesAlarm && alarm != null) {
+			if (activatesAlarm && alarm != null && !alarm.GetComponent<AudioSource>().isPlaying) {
 				agent.SetDestination(alarm.transform.position);
-				if (Vector3.Distance(transform.position, alarm.transform.position) < 5f) {
+				if (Vector3.Distance(transform.position, alarm.transform.position) <= 2f) {
 					alarm.GetComponent<Alarm>().ActivateAlarm();
 					activatesAlarm = false;
 				}
-			} else {
+			} else if (distance >= shootDistance) {
 				agent.SetDestination(target.position);
-			}
+                animator.SetBool("Shooting", false);
+            }
+            else
+            {
+                animator.SetInteger("Bullets", consecutiveShoots - currentShoots);
+                if (currentShoots == consecutiveShoots)
+                {
+                    animator.SetBool("Shooting", false);
+                }
+                else if (canShoot)
+                {
+                    ++currentShoots;
+                    canShoot = false;
+                    animator.SetBool("Shooting", true);
+                    transform.LookAt(target.transform, Vector3.up);
+                }
+            }
             animator.SetBool("Moving", rb.velocity.magnitude > 0f);
         }
 	}
@@ -79,5 +99,15 @@ public class IASoldiers : MonoBehaviour {
         {
             Destroy(this.gameObject, 1);
         }
+    }
+
+    public void EventReloadBullets()
+    {
+        currentShoots = 0;
+    }
+
+    public void EventCanShootAgain()
+    {
+        canShoot = true;
     }
 }
