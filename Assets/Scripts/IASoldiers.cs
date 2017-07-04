@@ -69,6 +69,7 @@ public class IASoldiers : MonoBehaviour {
     public void HitAndDecreaseHP(float damage)
     {
         HP -= damage;
+        isHostile = true;
         source.PlayOneShot(reactions[Random.Range(0, reactions.Length)]);
         if (HP <= 0f)
         {
