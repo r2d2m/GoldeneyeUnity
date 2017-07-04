@@ -19,6 +19,7 @@ public class Shoot : MonoBehaviour
 
     private MovementScript _move;
     private GameObject player;
+	private GameObject camera;
 
     public int magazineSize;
     public int WeaponAmmoSize;
@@ -43,6 +44,7 @@ public class Shoot : MonoBehaviour
 
         // Player instances
         player = GameObject.Find("007");
+		camera = GameObject.Find("Main Camera");
         _move = player.GetComponent<MovementScript>();
         normalSpeed = _move.speed;
 
@@ -78,10 +80,12 @@ public class Shoot : MonoBehaviour
                 animate.Play("Shoot");
                 source.PlayOneShot(shootBullet, volume);
 
-                Ray ray = new Ray(player.transform.position, player.transform.forward);
+				Debug.DrawRay (camera.transform.position, camera.transform.forward * 100, Color.green, 1);
+				Ray ray = new Ray(camera.transform.position, camera.transform.forward);
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit))
                 {
+					Debug.Log (hit.collider.gameObject.name);
 					if (hit.collider.gameObject.tag == "Enemy") {
 						IASoldiers _iaSoldier = hit.collider.gameObject.GetComponent<IASoldiers>();
 						_iaSoldier.HitAndDecreaseHP(weaponDamage);
