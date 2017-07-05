@@ -2,7 +2,7 @@
 
     private int id;
     private string description;
-    private bool completed;
+    private MissionStatus completed;
     private int progress;
     private int goal;
 
@@ -10,7 +10,7 @@
     {
         this.id = id;
         this.description = description;
-        this.completed = false;
+        this.completed = MissionStatus.Incomplete;
         this.goal = goal;
     }
 
@@ -24,15 +24,33 @@
         return this.description;
     }
 
-    public bool UpdateProgress()
+    public MissionStatus GetStatus()
+    {
+        return this.completed;
+    }
+
+    public MissionStatus UpdateProgress()
     {
         ++(this.progress);
         return CheckCompleted();
     }
 
-    private bool CheckCompleted()
+    public MissionStatus AbortProgress()
     {
-        this.completed = this.goal == this.progress;
+        this.progress = -1;
+        return CheckCompleted();
+    }
+
+    private MissionStatus CheckCompleted()
+    {
+        if (this.goal == this.progress)
+        {
+            this.completed = MissionStatus.Completed;
+        }
+        else if (this.progress == -1)
+        {
+            this.completed = MissionStatus.Failed;
+        }
         return this.completed;
     }
 }

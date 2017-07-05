@@ -25,12 +25,13 @@ public class Alarm : MonoBehaviour {
 				_iaSoldiers.RequestHelp();
 			}
 		}
+        _mision.UpdateProgress(0, true);
 	}
 
 	public void HitAndDecreaseHP(float damage) {
 		HP -= damage;
 		if (HP <= 0) {
-            _mision.UpdateProgress(0);
+            _mision.UpdateProgress(0, false);
 			source.Stop();
 			Destroy(this.gameObject, 0);
 		}

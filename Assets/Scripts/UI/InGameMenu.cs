@@ -12,6 +12,8 @@ public class InGameMenu : MonoBehaviour
     public AudioClip enableWatch;
     public AudioClip disableWatch;
 
+    public Font font;
+
     private AudioSource source;
     private Animator animator;
 
@@ -32,15 +34,14 @@ public class InGameMenu : MonoBehaviour
         menu = goMenu.GetComponent<Image>();
         menuBackground = goBackground.GetComponent<Image>();
         watch = goMenu.GetComponent<AudioSource>();
-        missions = goMenu.GetComponentsInChildren<Text>();
 
         _mission = GameObject.Find("HUD").GetComponent<Mission>();
-        foreach(Objective o in _mission.GetObjectives()) {
-            Text text = goMenu.AddComponent<Text>();
-            text.text = o.GetDescription();
-            Font font = (Font)Resources.GetBuiltinResource(typeof(Font), "007 GoldenEye");
-            text.font = font;
-            text.material = font.material;
+        foreach(Objective objective in _mission.GetObjectives()) {
+            string objectiveName = "Objective-" + objective.GetId().ToString();
+            GameObject.Find(objectiveName).GetComponent<Text>().text =
+                char.ConvertFromUtf32(65 + objective.GetId()) + "- " + objective.GetDescription();
+            string statusName = "Status-" + objective.GetId().ToString();
+            GameObject.Find(statusName).GetComponent<Text>().text = objective.GetStatus().ToString();
         }
 	}
 	
@@ -75,7 +76,23 @@ public class InGameMenu : MonoBehaviour
 
     public void UpdateMissionStatus(int id, MissionStatus status)
     {
-
+        missions = GameObject.Find("Menu").GetComponentsInChildren<Text>();
+        foreach (Text t in missions)
+        {
+            if (t.name.StartsWith("Status-") && t.name.Contains(id.ToString()))
+            {
+                t.text = status.ToString();
+                if (status == MissionStatus.Completed)
+                {
+                    t.fontStyle = FontStyle.Bold;
+                }
+                else if (status == MissionStatus.Failed)
+                {
+                    t.color = new Color(255, 0, 0);
+                }
+                return;
+            }
+        }
     }
 
     private void EventCanEnterMenu()
@@ -89,6 +106,7 @@ public class InGameMenu : MonoBehaviour
         menu.enabled = true;
         watch.PlayOneShot(enableWatch);
         menuBackground.enabled = true;
+        missions = GameObject.Find("Menu").GetComponentsInChildren<Text>();
         foreach (Text t in missions)
         {
             t.enabled = true;
