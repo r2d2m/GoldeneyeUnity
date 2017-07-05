@@ -9,6 +9,7 @@ public class Shoot : MonoBehaviour
     public AudioClip shootBullet;
     public AudioClip reloadWeapon;
     public float volume = 0.5f;
+	public GameObject muzzle;
 
     private AudioSource source;
     private Animation animate;
@@ -78,6 +79,7 @@ public class Shoot : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Mouse0) && !animate.IsPlaying("Shoot") && magazineBulletCount > 0)
             {
                 animate.Play("Shoot");
+				muzzle.GetComponent<ParticleSystem>().Play();
                 source.PlayOneShot(shootBullet, volume);
 
 				Debug.DrawRay (camera.transform.position, camera.transform.forward * 100, Color.green, 1);
