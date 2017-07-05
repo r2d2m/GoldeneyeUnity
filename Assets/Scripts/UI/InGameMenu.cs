@@ -22,6 +22,9 @@ public class InGameMenu : MonoBehaviour
     private AudioSource watch;
     private Text[] missions;
 
+    private GameObject player;
+    private GameObject camera;
+
     private Mission _mission;
 
 	void Start () {
@@ -43,6 +46,9 @@ public class InGameMenu : MonoBehaviour
             string statusName = "Status-" + objective.GetId().ToString();
             GameObject.Find(statusName).GetComponent<Text>().text = objective.GetStatus().ToString();
         }
+
+        player = GameObject.Find("007");
+        camera = GameObject.Find("Main Camera");
 	}
 	
 	void Update ()
@@ -65,6 +71,10 @@ public class InGameMenu : MonoBehaviour
             }
             else
             {
+                player.GetComponent<MovementScript>().enabled = false;
+                player.GetComponent<MousePlayer>().enabled = false;
+                camera.GetComponent<MouseCamera>().enabled = false;
+
                 animator.enabled = true;
 				source.Stop();
                 source.PlayOneShot(menuMusic, 1f);
@@ -99,6 +109,9 @@ public class InGameMenu : MonoBehaviour
     {
         isAnimated = false;
         animator.enabled = false;
+        player.GetComponent<MovementScript>().enabled = true;
+        player.GetComponent<MousePlayer>().enabled = true;
+        camera.GetComponent<MouseCamera>().enabled = true;
     }
 
     private void EventCanExitMenu()
