@@ -13,7 +13,7 @@ public class Shoot : MonoBehaviour
 	public GameObject fire;
 
     private AudioSource source;
-    private Animation animate;
+    private Animator animator;
 
     AmmoSetter _magazineAmmo;
     AmmoSetter _totalAmmo;
@@ -58,13 +58,14 @@ public class Shoot : MonoBehaviour
 
     void Awake()
     {
-        animate = GetComponent<Animation>();
         source = GetComponent<AudioSource>();
+        animator = GetComponent<Animator>();
+        animator.SetInteger("Bullets", magazineBulletCount);
     }
 
     void Update()
     {
-        if (Time.timeScale > 0 && !animate.IsPlaying("Reload"))
+        if (Time.timeScale > 0 && animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
         {
 			if (!Input.GetKey(KeyCode.Mouse1) && _move.speed != normalSpeed) {
 				_scopeActive.Active(false); 
@@ -77,19 +78,15 @@ public class Shoot : MonoBehaviour
                 _move.ModifySpeed(-speedDifference);
             }
 
-            if (Input.GetKeyDown(KeyCode.Mouse0) && !animate.IsPlaying("Shoot") && magazineBulletCount > 0)
+            if (Input.GetKeyDown(KeyCode.Mouse0) && animator.GetCurrentAnimatorStateInfo(0).IsName("Idle") && magazineBulletCount > 0)
             {
-                animate.Play("Shoot");
-				muzzle.GetComponent<ParticleSystem>().Play();
-				fire.GetComponent<ParticleSystem>().Play();
-                source.PlayOneShot(shootBullet, volume);
+                animator.SetBool("Shoot", true);
+                animator.SetInteger("Bullets", magazineBulletCount);
 
-				Debug.DrawRay (camera.transform.position, camera.transform.forward * 100, Color.green, 1);
 				Ray ray = new Ray(camera.transform.position, camera.transform.forward);
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit))
                 {
-					Debug.Log (hit.collider.gameObject.name);
 					if (hit.collider.gameObject.tag == "Enemy") {
 						IASoldiers _iaSoldier = hit.collider.gameObject.GetComponent<IASoldiers>();
 						_iaSoldier.HitAndDecreaseHP(weaponDamage);
@@ -100,9 +97,6 @@ public class Shoot : MonoBehaviour
 						_alarm.HitAndDecreaseHP(weaponDamage);
 					}
                 }
-
-                --magazineBulletCount;
-                _magazineAmmo.RefreshData(magazineBulletCount);
             }
 
             else if ((Input.GetKeyDown(KeyCode.R) || (magazineBulletCount == 0 && totalBulletCount != 0)) && magazineBulletCount < magazineSize)
@@ -110,23 +104,7 @@ public class Shoot : MonoBehaviour
                 if (totalBulletCount > 0)
                 {
                     _scopeActive.Active(false);
-                    animate.Play("Reload");
-                    source.PlayOneShot(reloadWeapon, volume);
-                    
-                    int currentAmmo = magazineBulletCount;
-                    if (totalBulletCount + currentAmmo >= magazineSize)
-                    {
-                        magazineBulletCount = magazineSize;
-                        totalBulletCount -= (magazineSize - currentAmmo);
-                    }
-                    else
-                    {
-                        magazineBulletCount += totalBulletCount;
-                        totalBulletCount = 0;
-                    }
-
-                    _magazineAmmo.RefreshData(magazineBulletCount);
-                    _totalAmmo.RefreshData(totalBulletCount);
+                    animator.SetInteger("Bullets", 0);
                 }
 
                 else if (!source.isPlaying)
@@ -141,5 +119,34 @@ public class Shoot : MonoBehaviour
     {
         totalBulletCount += magazineSize;
         _totalAmmo.RefreshData(totalBulletCount);
+    }
+
+    public void EventShoot()
+    {
+        muzzle.GetComponent<ParticleSystem>().Play();
+        fire.GetComponent<ParticleSystem>().Play();
+        source.PlayOneShot(shootBullet, volume);
+        --magazineBulletCount;
+        _magazineAmmo.RefreshData(magazineBulletCount);
+        animator.SetBool("Shoot", false);
+    }
+
+    public void EventReload()
+    {
+        source.PlayOneShot(reloadWeapon, volume);
+        int currentAmmo = magazineBulletCount;
+        if (totalBulletCount + currentAmmo >= magazineSize)
+        {
+            magazineBulletCount = magazineSize;
+            totalBulletCount -= (magazineSize - currentAmmo);
+        }
+        else
+        {
+            magazineBulletCount += totalBulletCount;
+            totalBulletCount = 0;
+        }
+        _magazineAmmo.RefreshData(magazineBulletCount);
+        _totalAmmo.RefreshData(totalBulletCount);
+        animator.SetInteger("Bullets", magazineBulletCount);
     }
 }
