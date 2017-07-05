@@ -10,6 +10,7 @@ public class Shoot : MonoBehaviour
     public AudioClip reloadWeapon;
     public float volume = 0.5f;
 	public GameObject muzzle;
+	public GameObject fire;
 
     private AudioSource source;
     private Animation animate;
@@ -80,6 +81,7 @@ public class Shoot : MonoBehaviour
             {
                 animate.Play("Shoot");
 				muzzle.GetComponent<ParticleSystem>().Play();
+				fire.GetComponent<ParticleSystem>().Play();
                 source.PlayOneShot(shootBullet, volume);
 
 				Debug.DrawRay (camera.transform.position, camera.transform.forward * 100, Color.green, 1);
