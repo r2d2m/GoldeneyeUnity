@@ -820,6 +820,30 @@ ModelImporter:
     101624: Vidre_torre
     101626: Vidre_torre 1
     101628: Vidre_torre 2
+    101630: Caixes_pros4
+    101632: Caixes_pros5
+    101634: Caixes_pros6
+    101636: pCube108 4
+    101638: pCube108 5
+    101640: pCube108 6
+    101642: pCube109 4
+    101644: pCube109 5
+    101646: pCube109 6
+    101648: pCube111 4
+    101650: pCube111 5
+    101652: pCube111 6
+    101654: pCube115 4
+    101656: pCube115 5
+    101658: pCube115 6
+    101660: pCube116 4
+    101662: pCube116 5
+    101664: pCube116 6
+    101666: pCube117 4
+    101668: pCube117 5
+    101670: pCube117 6
+    101672: Porta_valla1
+    101674: Porta_valla2
+    101676: pPlane8 4
     400000: Alarma
     400002: Barand
     400004: Barandilla
@@ -1635,6 +1659,30 @@ ModelImporter:
     401624: Vidre_torre
     401626: Vidre_torre 1
     401628: Vidre_torre 2
+    401630: Caixes_pros4
+    401632: Caixes_pros5
+    401634: Caixes_pros6
+    401636: pCube108 4
+    401638: pCube108 5
+    401640: pCube108 6
+    401642: pCube109 4
+    401644: pCube109 5
+    401646: pCube109 6
+    401648: pCube111 4
+    401650: pCube111 5
+    401652: pCube111 6
+    401654: pCube115 4
+    401656: pCube115 5
+    401658: pCube115 6
+    401660: pCube116 4
+    401662: pCube116 5
+    401664: pCube116 6
+    401666: pCube117 4
+    401668: pCube117 5
+    401670: pCube117 6
+    401672: Porta_valla1
+    401674: Porta_valla2
+    401676: pPlane8 4
     2300000: Barandilla
     2300002: Barandilla 1
     2300004: Barandilla 2
@@ -2247,6 +2295,27 @@ ModelImporter:
     2301218: Valla11
     2301220: Valla14
     2301222: Valla2
+    2301224: pCube108 4
+    2301226: pCube108 5
+    2301228: pCube108 6
+    2301230: pCube109 4
+    2301232: pCube109 5
+    2301234: pCube109 6
+    2301236: pCube111 4
+    2301238: pCube111 5
+    2301240: pCube111 6
+    2301242: pCube115 4
+    2301244: pCube115 5
+    2301246: pCube115 6
+    2301248: pCube116 4
+    2301250: pCube116 5
+    2301252: pCube116 6
+    2301254: pCube117 4
+    2301256: pCube117 5
+    2301258: pCube117 6
+    2301260: Porta_valla1
+    2301262: Porta_valla2
+    2301264: pPlane8 4
     3300000: Barandilla
     3300002: Barandilla 1
     3300004: Barandilla 2
@@ -2859,6 +2928,27 @@ ModelImporter:
     3301218: Valla11
     3301220: Valla14
     3301222: Valla2
+    3301224: pCube108 4
+    3301226: pCube108 5
+    3301228: pCube108 6
+    3301230: pCube109 4
+    3301232: pCube109 5
+    3301234: pCube109 6
+    3301236: pCube111 4
+    3301238: pCube111 5
+    3301240: pCube111 6
+    3301242: pCube115 4
+    3301244: pCube115 5
+    3301246: pCube115 6
+    3301248: pCube116 4
+    3301250: pCube116 5
+    3301252: pCube116 6
+    3301254: pCube117 4
+    3301256: pCube117 5
+    3301258: pCube117 6
+    3301260: Porta_valla1
+    3301262: Porta_valla2
+    3301264: pPlane8 4
     4300000: polySurface16
     4300002: polySurface17
     4300004: polySurface15
@@ -3471,6 +3561,27 @@ ModelImporter:
     4301218: pCube81
     4301220: Llum
     4301222: Dam
+    4301224: pCube108
+    4301226: pCube109
+    4301228: pCube116
+    4301230: pCube115
+    4301232: pCube111
+    4301234: pCube117
+    4301236: pPlane8
+    4301238: pCube108
+    4301240: pCube109
+    4301242: pCube116
+    4301244: pCube115
+    4301246: pCube111
+    4301248: pCube117
+    4301250: pCube108
+    4301252: pCube109
+    4301254: pCube116
+    4301256: pCube115
+    4301258: pCube111
+    4301260: pCube117
+    4301262: Porta_valla1
+    4301264: Porta_valla2
     9500000: //RootNode
   materials:
     importMaterials: 1
