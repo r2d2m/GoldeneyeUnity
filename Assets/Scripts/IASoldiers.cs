@@ -12,6 +12,7 @@ public class IASoldiers : MonoBehaviour {
     public int consecutiveShoots = 1000;
 
 	public bool activatesAlarm = false;
+    public GameObject muzzle;
 
     public AudioClip[] reactions;
     private AudioSource source;
@@ -65,6 +66,7 @@ public class IASoldiers : MonoBehaviour {
 			} else if (distance >= shootDistance) {
 				agent.SetDestination(target.position);
                 animator.SetBool("Shooting", false);
+                muzzle.GetComponent<ParticleSystem>().Play();
             }
             else
             {

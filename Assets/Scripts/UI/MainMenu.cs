@@ -47,6 +47,7 @@ public class MainMenu : MonoBehaviour
         mainBackground = GameObject.Find("MainBackground");
         // Gamemode
         singleplayer = GameObject.Find("Singleplayer");
+        
         multiplayer = GameObject.Find("Multiplayer");
         pierce = GameObject.Find("Pierce");
         levels = GameObject.Find("Levels");
@@ -67,7 +68,11 @@ public class MainMenu : MonoBehaviour
 
     void Update()
     {
-        if (Input.anyKey && states[currentState] == MenuStatus.Main)
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            OnClickStart();
+        }
+        else if (Input.anyKey && states[currentState] == MenuStatus.Main)
         {
             source.Stop();
             source.PlayOneShot(levelMusic);
