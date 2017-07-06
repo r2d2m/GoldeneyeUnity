@@ -47,7 +47,7 @@ public class IASoldiers : MonoBehaviour {
 				if (Physics.Raycast(ray, out hit)) {
 					GameObject[] allies = GameObject.FindGameObjectsWithTag("Enemy");
 					foreach (GameObject ally in allies) {
-						if (Vector3.Distance (transform.position, ally.transform.position) <= helpDistance) {
+						if (Vector3.Distance(transform.position, ally.transform.position) <= helpDistance) {
 							_iaSoldiers = ally.GetComponent<IASoldiers>();
 							_iaSoldiers.RequestHelp();
 						}
@@ -66,10 +66,10 @@ public class IASoldiers : MonoBehaviour {
 			} else if (distance >= shootDistance) {
 				agent.SetDestination(target.position);
                 animator.SetBool("Shooting", false);
-                muzzle.GetComponent<ParticleSystem>().Play();
             }
             else
             {
+				agent.SetDestination(transform.position);
                 animator.SetInteger("Bullets", consecutiveShoots - currentShoots);
                 if (currentShoots == consecutiveShoots)
                 {
@@ -81,6 +81,7 @@ public class IASoldiers : MonoBehaviour {
                     canShoot = false;
                     animator.SetBool("Shooting", true);
                     transform.LookAt(target.transform, Vector3.up);
+					muzzle.GetComponent<ParticleSystem>().Play();
                 }
             }
             animator.SetBool("Moving", rb.velocity.magnitude > 0f);
