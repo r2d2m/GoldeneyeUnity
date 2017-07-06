@@ -13,11 +13,6 @@ public class Mission : MonoBehaviour {
 	void Start () {
         _inGameMenu = GameObject.Find("Main Camera").GetComponent<InGameMenu>();
 
-        // TODO: Create on menu selection
-        PlayerPrefs.SetString("Mission0", "Neutralize all alarms");
-        PlayerPrefs.SetString("Mission1", "Install covert modem");
-        PlayerPrefs.SetString("Mission2", "Bungee jump from platform");
-        //
         messages = GameObject.Find("Messages").GetComponent<Text>();
 		objectives = new List<Objective> ();
 		int i = 0;
