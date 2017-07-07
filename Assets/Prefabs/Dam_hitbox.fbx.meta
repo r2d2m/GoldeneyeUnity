@@ -1,69 +1,17 @@
 fileFormatVersion: 2
-guid: a5d2ea36be6e97d4fa02fd7f39a0221f
-timeCreated: 1499394786
+guid: 1860314b37c7b12469ee8a62403af0f4
+timeCreated: 1499395696
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: Dam2
-    100002: Floor
-    100004: Floor1
-    100006: Floor2
-    100008: Floor3
-    100010: Floor4
-    100012: //RootNode
-    100014: pCube201
-    100016: pCube202
-    100018: pCube206
-    100020: pCube207
-    100022: pPlane9
-    100024: Torre_hitboxes
+    100002: //RootNode
     400000: Dam2
-    400002: Floor
-    400004: Floor1
-    400006: Floor2
-    400008: Floor3
-    400010: Floor4
-    400012: //RootNode
-    400014: pCube201
-    400016: pCube202
-    400018: pCube206
-    400020: pCube207
-    400022: pPlane9
-    400024: Torre_hitboxes
+    400002: //RootNode
     2300000: Dam2
-    2300002: Floor
-    2300004: Floor1
-    2300006: Floor2
-    2300008: Floor3
-    2300010: Floor4
-    2300012: pCube201
-    2300014: pCube202
-    2300016: pCube206
-    2300018: pCube207
-    2300020: pPlane9
     3300000: Dam2
-    3300002: Floor
-    3300004: Floor1
-    3300006: Floor2
-    3300008: Floor3
-    3300010: Floor4
-    3300012: pCube201
-    3300014: pCube202
-    3300016: pCube206
-    3300018: pCube207
-    3300020: pPlane9
-    4300000: pCube206
-    4300002: pCube202
-    4300004: pCube201
-    4300006: pPlane9
-    4300008: Dam2
-    4300010: Floor4
-    4300012: Floor3
-    4300014: pCube207
-    4300016: Floor2
-    4300018: Floor
-    4300020: Floor1
+    4300000: Dam2
     9500000: //RootNode
   materials:
     importMaterials: 1
