@@ -104,7 +104,7 @@ public class IASoldiers : MonoBehaviour {
         source.PlayOneShot(reactions[Random.Range(0, reactions.Length)]);
         if (HP <= 0f)
         {
-            Destroy(this.gameObject, 1);
+            Destroy(this.gameObject, 0);
         }
     }
 
@@ -122,7 +122,7 @@ public class IASoldiers : MonoBehaviour {
 
 	public void EventShootMuzzle()
 	{
-		if (!weaponSource.isPlaying)
+		if (weaponSource != null && !weaponSource.isPlaying)
 		{
 			++currentShoots;
 			weaponSource.Play();

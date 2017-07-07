@@ -5,10 +5,12 @@ public class EndMission : MonoBehaviour {
 
 	private bool finishing = false;
 	private Camera camera;
+	private Mission _mision;
 
 	void Start()
 	{
 		camera = GameObject.Find("Main Camera").GetComponent<Camera>();
+		_mision = GameObject.Find("HUD").GetComponent<Mission>();
 	}
 
 	void Update()
@@ -16,6 +18,7 @@ public class EndMission : MonoBehaviour {
 		if (finishing)
 		{
 			camera.fieldOfView -= Time.deltaTime * 50;
+			_mision.UpdateProgress(2, false);
 		}
 		if (camera.fieldOfView <= 0)
 		{

@@ -19,9 +19,14 @@ public class Mission : MonoBehaviour {
 		while (PlayerPrefs.HasKey("Mission" + i.ToString()))
 		{
             string description = PlayerPrefs.GetString("Mission" + i.ToString());
-			objectives.Add(new Objective(i, description, 1));
+			objectives.Add(new Objective(i, description, GetCount(i)));
 			++i;
 		}
+	}
+
+	private int GetCount(int i)
+	{
+		return i == 0 ? 3 : 1;
 	}
 
 	public void UpdateProgress(int objectiveId, bool abort)
@@ -30,19 +35,18 @@ public class Mission : MonoBehaviour {
 		{
 			if (o.GetId() == objectiveId)
 			{
-                MissionStatus status = abort ? o.AbortProgress() : o.UpdateProgress();
-				if (status == MissionStatus.Completed)
-				{
-                    messages.text = "Objective " + char.ConvertFromUtf32(65 + o.GetId()) + " completed";
-                    _inGameMenu.UpdateMissionStatus(objectiveId, status);
-                    StartCoroutine(RemoveText());
-                }
-                else if (status == MissionStatus.Failed)
-                {
-                    messages.text = "Objective " + char.ConvertFromUtf32(65 + o.GetId()) + " failed";
-                    _inGameMenu.UpdateMissionStatus(objectiveId, status);
-                    StartCoroutine(RemoveText());
-                }
+				if (o.GetStatus() == MissionStatus.Incomplete) {
+					MissionStatus status = abort ? o.AbortProgress () : o.UpdateProgress ();
+					if (status == MissionStatus.Completed) {
+						messages.text = "Objective " + char.ConvertFromUtf32 (65 + o.GetId ()) + " completed";
+						_inGameMenu.UpdateMissionStatus (objectiveId, status);
+						StartCoroutine (RemoveText ());
+					} else if (status == MissionStatus.Failed) {
+						messages.text = "Objective " + char.ConvertFromUtf32 (65 + o.GetId ()) + " failed";
+						_inGameMenu.UpdateMissionStatus (objectiveId, status);
+						StartCoroutine (RemoveText ());
+					}
+				}
 			}
 		}
 	}
