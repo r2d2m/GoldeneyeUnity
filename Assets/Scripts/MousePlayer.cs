@@ -10,6 +10,7 @@ public class MousePlayer : MonoBehaviour
     void Start()
     {
         Cursor.visible = false;
+		Cursor.SetCursor(null, Vector2.zero, CursorMode.Auto);
     }
 
     void Update()
