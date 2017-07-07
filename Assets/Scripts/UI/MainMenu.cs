@@ -47,7 +47,6 @@ public class MainMenu : MonoBehaviour
         mainBackground = GameObject.Find("MainBackground");
         // Gamemode
         singleplayer = GameObject.Find("Singleplayer");
-        
         multiplayer = GameObject.Find("Multiplayer");
         pierce = GameObject.Find("Pierce");
         levels = GameObject.Find("Levels");
@@ -99,15 +98,26 @@ public class MainMenu : MonoBehaviour
     {
         switch (states[currentState])
         {
-            case MenuStatus.Background:
-                break;
-            case MenuStatus.Chat1:
-                break;
-            case MenuStatus.Chat2:
-                break;
-            case MenuStatus.Chat3:
-                OnClickStart();
-                break;
+		case MenuStatus.Gamemode:
+			singleplayer.GetComponent<Text>().enabled = false;
+			multiplayer.GetComponent<Text>().enabled = false;
+			pierce.GetComponent<Text>().enabled = false;
+			break;
+		case MenuStatus.Mission:
+			break;
+		case MenuStatus.Difficulty:
+			break;
+		case MenuStatus.Objectives:
+			break;
+        case MenuStatus.Background:
+            break;
+        case MenuStatus.Chat1:
+            break;
+        case MenuStatus.Chat2:
+            break;
+        case MenuStatus.Chat3:
+            OnClickStart();
+            break;
         }
 
         currentState = Mathf.Min(states.Count, currentState + 1);
