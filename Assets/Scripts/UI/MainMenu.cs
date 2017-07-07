@@ -22,6 +22,7 @@ public class MainMenu : MonoBehaviour
     private GameObject levels;
     private GameObject difficulty;
     private GameObject background;
+	private GameObject objectives;
 
     private List<MenuStatus> states;
     private int currentState = 0;
@@ -50,8 +51,9 @@ public class MainMenu : MonoBehaviour
         multiplayer = GameObject.Find("Multiplayer");
         pierce = GameObject.Find("Pierce");
         levels = GameObject.Find("Levels");
-        difficulty = GameObject.Find("Difficulty");
+		difficulty = GameObject.Find("Difficulty");
         background = GameObject.Find("Background");
+		objectives = GameObject.Find("Objectives");
 
         states = new List<MenuStatus>();
         states.Add(MenuStatus.Main);
@@ -99,15 +101,32 @@ public class MainMenu : MonoBehaviour
         switch (states[currentState])
         {
 		case MenuStatus.Gamemode:
-			singleplayer.GetComponent<Text>().enabled = false;
-			multiplayer.GetComponent<Text>().enabled = false;
-			pierce.GetComponent<Text>().enabled = false;
+			singleplayer.GetComponent<Text> ().enabled = false;
+			multiplayer.GetComponent<Text> ().enabled = false;
+			pierce.GetComponent<Image> ().enabled = false;
+			foreach (Image i in levels.GetComponentsInChildren<Image>()) {
+				i.enabled = true;
+			}
 			break;
 		case MenuStatus.Mission:
+			foreach (Image i in levels.GetComponentsInChildren<Image>()) {
+				i.enabled = false;
+			}
+			foreach (Text t in difficulty.GetComponentsInChildren<Text>()) {
+				t.enabled = true;
+			}
 			break;
 		case MenuStatus.Difficulty:
+			foreach (Text t in difficulty.GetComponentsInChildren<Text>()) {
+				t.enabled = false;
+			}
+			foreach (Text t in objectives.GetComponentsInChildren<Text>()) {
+				t.enabled = true;
+			}
+			startButton.GetComponent<Button>().interactable = true;
 			break;
 		case MenuStatus.Objectives:
+			OnClickStart();
 			break;
         case MenuStatus.Background:
             break;
